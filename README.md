@@ -1,53 +1,177 @@
-# Smart Vibe ⚡
-متجر إلكتروني متكامل للأجهزة المنزلية الذكية — Full Stack E-Commerce
+# SmartBayt Frontend 🛍️
 
-🔗 [Live Demo](https://smartbayt-frontend-eight.vercel.app)
+A modern, fully-featured **e-commerce storefront** built with **React 18**, **TypeScript**, and **Tailwind CSS** — complete with a powerful Admin Dashboard.
 
----
-
-## Tech Stack
-
-**Frontend:** React 18 · TypeScript · Vite · Tailwind CSS · shadcn/ui · Framer Motion · React Query · React Router · Axios · Zod
-
-**Backend:** ASP.NET Core 10 · Entity Framework Core · PostgreSQL · JWT Auth · BCrypt · CloudinaryDotNet
-
-**Hosting:** Vercel (Frontend) · Railway (Backend + DB) · Cloudinary (Images)
+> 🔗 Powered by [SmartBayt API](https://github.com/t9amw0rk-sys/smartbayt-api)
 
 ---
 
-## Features
+## ✨ Features
 
-- 🛒 سلة تسوق وقائمة مفضلة
-- 🔍 بحث وفلترة حسب التصنيف والسعر
-- 🎟️ كوبونات خصم (نسبة / مبلغ ثابت)
-- 👤 نظام مستخدمين مع JWT (User / Admin)
-- 🌙 Dark / Light Mode
-- 📱 Responsive Design
-- 🖼️ رفع صور على Cloudinary
-- ⭐ مراجعات منتجات مع نظام موافقة
+### 🛒 Customer Side
+- 🏠 **Home Page** — Hero section, featured products, categories showcase
+- 🛍️ **Shop** — Browse, filter, and search products
+- 📄 **Product Detail** — Image gallery, reviews, quick add to cart
+- ❤️ **Wishlist** — Save products for later
+- 🛒 **Cart & Checkout** — Full cart management with order confirmation
+- 👤 **User Profile** — Update info and view order history
+- 🔐 **Auth** — Login, Register, Forgot/Reset Password
 
-## Admin Panel
-
-Dashboard · Products · Categories · Orders · Customers · Reviews · Coupons · Blog · FAQs · Jobs · Settings
+### 🔧 Admin Dashboard
+- 📊 **Dashboard** — Overview stats and analytics
+- 📦 **Products** — Full CRUD with image upload
+- 🗂️ **Categories** — Manage product categories
+- 📋 **Orders** — Track and manage customer orders
+- 👥 **Customers** — View registered users
+- 🎟️ **Coupons** — Discount code management
+- ⭐ **Reviews** — Moderate product reviews
+- ❓ **FAQs** — Manage frequently asked questions
+- 📝 **Blog** — Content management
+- 💼 **Jobs** — Job listings management
+- ⚙️ **Settings** — App configuration
 
 ---
 
-## Run Locally
+## 🛠️ Tech Stack
+
+| Category | Technology |
+|----------|-----------|
+| Framework | React 18 + TypeScript |
+| Build Tool | Vite |
+| Styling | Tailwind CSS + shadcn/ui |
+| State Management | TanStack Query (React Query) |
+| Routing | React Router DOM v7 |
+| Forms | React Hook Form + Zod |
+| Animations | Framer Motion |
+| HTTP Client | Axios |
+| Icons | Lucide React |
+| Charts | Recharts |
+| Theme | next-themes (Dark/Light mode) |
+| Testing | Vitest + Testing Library |
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── api/                    # API layer (Axios calls)
+│   ├── client.ts           # Axios instance with interceptors
+│   ├── auth.ts             # Auth endpoints
+│   ├── products.ts         # Products endpoints
+│   ├── orders.ts           # Orders endpoints
+│   ├── categories.ts       # Categories endpoints
+│   └── other.ts            # Reviews, FAQs, etc.
+├── components/
+│   ├── admin/              # Admin layout & protected routes
+│   ├── cart/               # Cart drawer
+│   ├── home/               # Hero, Featured Products, Categories
+│   ├── layout/             # Navbar & Footer
+│   ├── products/           # Product card & quick view
+│   ├── search/             # Search modal
+│   └── ui/                 # shadcn/ui components
+├── context/
+│   ├── AuthContext.tsx     # Authentication state
+│   ├── CartContext.tsx     # Shopping cart state
+│   ├── WishlistContext.tsx # Wishlist state
+│   └── ThemeContext.tsx    # Dark/Light mode
+├── pages/
+│   ├── Home.tsx
+│   ├── Shop.tsx
+│   ├── ProductDetail.tsx
+│   ├── Cart.tsx
+│   ├── Checkout.tsx
+│   ├── Wishlist.tsx
+│   ├── Profile.tsx
+│   ├── Login.tsx / Register.tsx
+│   └── admin/              # All admin pages
+└── App.tsx                 # Routes & providers
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Node.js 18+](https://nodejs.org/)
+- [SmartBayt API](https://github.com/t9amw0rk-sys/smartbayt-api) running locally or deployed
+
+### 1. Clone the repository
 
 ```bash
-# Frontend
-npm install && npm run dev
-
-# Backend
-dotnet ef database update && dotnet run
+git clone https://github.com/t9amw0rk-sys/smartbayt-frontend.git
+cd smartbayt-frontend
 ```
 
-**ENV variables needed:**
+### 2. Install dependencies
+
+```bash
+npm install
 ```
-VITE_API_URL=
-ConnectionStrings__DefaultConnection=
-Jwt__Key=
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
+
+### 3. Configure environment variables
+
+```bash
+cp .env.example .env
 ```
+
+Edit `.env`:
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`
+
+---
+
+## 📦 Available Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
+| `npm run test` | Run tests once |
+| `npm run test:watch` | Run tests in watch mode |
+
+---
+
+## 🌐 Deployment
+
+### Build for production
+
+```bash
+npm run build
+```
+
+Output will be in the `dist/` folder — deploy to **Vercel**, **Netlify**, or any static hosting.
+
+### Vercel (Recommended)
+
+```bash
+npm i -g vercel
+vercel
+```
+
+Set the environment variable `VITE_API_URL` in your Vercel project settings.
+
+---
+
+## 🔗 Related
+
+- **Backend API** → [smartbayt-api](https://github.com/t9amw0rk-sys/smartbayt-api)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
