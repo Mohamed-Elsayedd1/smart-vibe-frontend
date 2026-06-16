@@ -8,7 +8,7 @@ import { Camera, Lock, Save, User, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, refreshUser } = useAuth();
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -68,6 +68,8 @@ const Profile = () => {
         u.avatarUrl = avatarUrl;
         localStorage.setItem("user", JSON.stringify(u));
       }
+      // تحديث الـ AuthContext عشان الـ Navbar يتحدث فورًا
+      refreshUser();
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "حدث خطأ");
     } finally { setSaving(false); }
