@@ -4,7 +4,7 @@ import { apiClient } from "@/api/client";
 import { uploadApi } from "@/api/other";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Camera, Lock, Save, User } from "lucide-react";
+import { Camera, Lock, Save, User, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -13,7 +13,8 @@ const Profile = () => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [fullName, setFullName] = useState(user?.fullName || "");
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
+  // إصلاح: نبدأ بالصورة الموجودة عند اليوزر
+  const [avatarUrl, setAvatarUrl] = useState<string>((user as any)?.avatarUrl || "");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,6 +36,11 @@ const Profile = () => {
     finally { setUploading(false); }
   };
 
+  const handleRemoveAvatar = () => {
+    setAvatarUrl("");
+    toast.success("تم حذف الصورة، اضغط حفظ لتأكيد");
+  };
+
   const saveProfile = async () => {
     if (newPassword && newPassword !== confirmPassword)
       return toast.error("كلمة المرور الجديدة غير متطابقة");
@@ -45,7 +51,7 @@ const Profile = () => {
     try {
       await apiClient.put("/api/auth/profile", {
         fullName,
-        avatarUrl: avatarUrl || undefined,
+        avatarUrl: avatarUrl || "",
         currentPassword: currentPassword || undefined,
         newPassword: newPassword || undefined,
       });
@@ -59,7 +65,7 @@ const Profile = () => {
       if (saved) {
         const u = JSON.parse(saved);
         u.fullName = fullName;
-        if (avatarUrl) u.avatarUrl = avatarUrl;
+        u.avatarUrl = avatarUrl;
         localStorage.setItem("user", JSON.stringify(u));
       }
     } catch (err: any) {
@@ -67,7 +73,7 @@ const Profile = () => {
     } finally { setSaving(false); }
   };
 
-  const displayAvatar = avatarUrl || (user as any).avatarUrl;
+  const displayAvatar = avatarUrl;
   const initials = (fullName || user.email).charAt(0).toUpperCase();
 
   return (
@@ -104,6 +110,12 @@ const Profile = () => {
                   <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold mt-1 inline-block">أدمن</span>
                 )}
                 {uploading && <p className="text-xs text-muted-foreground mt-1">جاري الرفع...</p>}
+                {displayAvatar && !uploading && (
+                  <button onClick={handleRemoveAvatar}
+                    className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 mt-2 transition-colors">
+                    <Trash2 className="w-3 h-3" /> حذف الصورة
+                  </button>
+                )}
               </div>
             </div>
           </div>
