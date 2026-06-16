@@ -138,9 +138,17 @@ const Navbar = () => {
                 aria-label="حسابي"
               >
                 {user ? (
-                  <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
-                    {user.fullName ? user.fullName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-                  </div>
+                  (user as any).avatarUrl ? (
+                    <img
+                      src={(user as any).avatarUrl}
+                      alt={user.fullName || user.email}
+                      className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/30"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
+                      {user.fullName ? user.fullName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                    </div>
+                  )
                 ) : (
                   <User className="w-5 h-5" />
                 )}
@@ -158,8 +166,18 @@ const Navbar = () => {
                   >
                     <div className="p-4 border-b border-border bg-gradient-to-br from-primary/5 to-transparent">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center text-primary-foreground font-bold text-lg flex-shrink-0">
-                          {user.fullName ? user.fullName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                        <div className="w-12 h-12 rounded-full flex-shrink-0 overflow-hidden ring-2 ring-primary/20">
+                          {(user as any).avatarUrl ? (
+                            <img
+                              src={(user as any).avatarUrl}
+                              alt={user.fullName || user.email}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-primary flex items-center justify-center text-primary-foreground font-bold text-lg">
+                              {user.fullName ? user.fullName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                            </div>
+                          )}
                         </div>
                         <div className="min-w-0">
                           <p className="font-bold truncate">{user.fullName || "المستخدم"}</p>
