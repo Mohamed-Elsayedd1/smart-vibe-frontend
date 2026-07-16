@@ -3,6 +3,7 @@ import ProductCard from "@/components/products/ProductCard";
 import QuickViewModal from "@/components/products/QuickViewModal";
 import { productsApi } from "@/api/products";
 import { categoriesApi } from "@/api/categories";
+import { demoProducts, demoCategories } from "@/data/products";
 
 const Shop = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -16,14 +17,19 @@ const Shop = () => {
       productsApi.getAll({ pageSize: 100, active: true }),
       categoriesApi.getAll(),
     ]).then(([prods, cats]) => {
-      setProducts(prods.data || []);
-      setCategories(cats || []);
-    }).catch(() => {}).finally(() => setLoading(false));
+      const prodList = prods.data || [];
+      const catList = cats || [];
+      // لو الـ API رجّع فاضي، نعرض بيانات تجريبية بدل صفحة فاضية
+      setProducts(prodList.length > 0 ? prodList : demoProducts);
+      setCategories(catList.length > 0 ? catList : demoCategories);
+    }).catch(() => {
+      setProducts(demoProducts);
+      setCategories(demoCategories);
+    }).finally(() => setLoading(false));
   }, []);
 
   const filtered = cat === "الكل" ? products : products.filter((p) => p.category === cat);
 
-  // تحويل بيانات الـ API لنفس شكل الـ Product القديم
   const mapProduct = (p: any) => ({
     id: p.id,
     name: p.name,
