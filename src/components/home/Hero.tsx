@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { productsApi } from "@/api/products";
 import { settingsApi } from "@/api/other";
 import { resolveImageUrl, formatPrice } from "@/utils/format";
+import { demoProducts } from "@/data/products";
 
 interface HeroSettings {
   title?: string;
@@ -23,8 +24,8 @@ interface FeaturedProduct {
 const Hero = () => {
   const [settings, setSettings] = useState<HeroSettings>({});
   const [featured, setFeatured] = useState<FeaturedProduct[]>([]);
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
 
-  // جيب إعدادات الـ Hero من الـ API
   useEffect(() => {
     settingsApi.getByKey("hero")
       .then((data) => {
@@ -36,9 +37,12 @@ const Hero = () => {
       .catch(() => {});
   }, []);
 
-  // جيب أول 3 منتجات — بس لو مفيش صورة Hero من الإعدادات
   useEffect(() => {
-    if (settings.image_url) return; // لو في صورة → مش محتاجين منتجات
+    if (settings.image_url) return;
+    setLoadingFeatured(true);
+    const demoFallback = () =>
+      demoProducts.slice(0, 3).map((p) => ({ id: p.id, name: p.name, price: p.price, image: p.image }));
+
     productsApi.getAll({ pageSize: 3, active: true })
       .then((res) => {
         const list = (res.data || res || []).slice(0, 3).map((p: any) => ({
@@ -47,9 +51,10 @@ const Hero = () => {
           price: p.price,
           image: resolveImageUrl(p.image),
         }));
-        setFeatured(list);
+        setFeatured(list.length > 0 ? list : demoFallback());
       })
-      .catch(() => {});
+      .catch(() => setFeatured(demoFallback())) // السيرفر مش راد (نايم على Railway أو واقع) → بيانات تجريبية
+      .finally(() => setLoadingFeatured(false));
   }, [settings.image_url]);
 
   const title = settings.title || "اجعل منزلك";
@@ -57,8 +62,6 @@ const Hero = () => {
   const titleEnd = "اليوم";
   const subtitle = settings.subtitle || "اكتشف أجهزة المنزل الذكي المدعومة بالذكاء الاصطناعي، صممت لتجعل حياتك أسهل وأكثر راحة.";
   const cta = settings.cta || "تسوق الآن";
-
-  // لو في صورة Hero من الإعدادات، نعرضها بدل المنتجات
   const heroImage = settings.image_url ? resolveImageUrl(settings.image_url) : null;
 
   return (
@@ -110,11 +113,7 @@ const Hero = () => {
             </span>
           </div>
         </motion.div>
-
-        {/* الصور */}
         <div className="md:col-span-2 relative h-[500px] hidden md:block">
-
-          {/* لو في صورة Hero من الإعدادات */}
           {heroImage ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -124,8 +123,13 @@ const Hero = () => {
             >
               <img src={heroImage} alt="Hero" className="w-full h-full object-cover" />
             </motion.div>
+          ) : loadingFeatured ? (
+            <div className="absolute inset-0 grid grid-rows-3 gap-4">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="bg-surface rounded-2xl border border-border animate-pulse" />
+              ))}
+            </div>
           ) : featured.length > 0 ? (
-            // لو فيه منتجات من الـ API
             featured.map((p, i) => (
               <motion.div
                 key={p.id}
@@ -146,7 +150,6 @@ const Hero = () => {
               </motion.div>
             ))
           ) : (
-            // Placeholder لو مفيش بيانات لسه
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
