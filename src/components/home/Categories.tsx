@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { categoriesApi } from "@/api/categories";
+import { demoCategories } from "@/data/products";
 
 const DEFAULT_ICON = "📦";
 const ICON_MAP: Record<string, string> = {
@@ -36,9 +37,9 @@ const Categories = () => {
     categoriesApi.getAll()
       .then((data) => {
         const list = Array.isArray(data) ? data : (data?.data ?? []);
-        setCategories(list);
+        setCategories(list.length > 0 ? list : demoCategories);
       })
-      .catch(() => {})
+      .catch(() => setCategories(demoCategories))
       .finally(() => setLoading(false));
   }, []);
 
