@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/products/ProductCard";
 import QuickViewModal from "@/components/products/QuickViewModal";
-import { Product } from "@/data/products";
+import { Product, demoProducts } from "@/data/products";
 import { productsApi } from "@/api/products";
 import { resolveImageUrl } from "@/utils/format";
 
@@ -39,9 +39,9 @@ const FeaturedProducts = () => {
       .then((res) => {
         let list = (res.data || res || []).map(mapProduct);
         if (tab === "الأكثر مبيعاً") list = list.filter((p: Product) => p.reviews > 50);
-        setProducts(list);
+        setProducts(list.length > 0 ? list : demoProducts);
       })
-      .catch(() => setProducts([]))
+      .catch(() => setProducts(demoProducts))
       .finally(() => setLoading(false));
   }, [tab]);
 
