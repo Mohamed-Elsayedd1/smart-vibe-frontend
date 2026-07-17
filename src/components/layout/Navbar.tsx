@@ -7,6 +7,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
 import { categoriesApi } from "@/api/categories";
+import { demoCategories } from "@/data/products";
 import SearchModal from "@/components/search/SearchModal";
 
 const DEFAULT_ICON = "📦";
@@ -55,9 +56,10 @@ const Navbar = () => {
     categoriesApi.getAll()
       .then((data) => {
         const list = Array.isArray(data) ? data : (data?.data ?? []);
-        setCategories(list);
+        // لو الـ API رجّع فاضي، نعرض تصنيفات تجريبية بدل ما القائمة تفضل فاضية في النافبار
+        setCategories(list.length > 0 ? list : demoCategories);
       })
-      .catch(() => {});
+      .catch(() => setCategories(demoCategories));
   }, []);
 
   useEffect(() => {

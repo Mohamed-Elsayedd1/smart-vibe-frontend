@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Heart, Minus, Plus, RotateCcw, Shield, ShieldCheck, Star, Truck } from "lucide-react";
-import { Product } from "@/data/products";
+import { Product, demoProducts } from "@/data/products";
 import { productsApi } from "@/api/products";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -47,6 +47,21 @@ const ProductDetail = () => {
     if (!id) return;
     setLoading(true);
     setActiveImg(0);
+
+    const useDemoFallback = () => {
+      const demo = demoProducts.find((p) => p.id === id);
+      if (!demo) {
+        // مش منتج حقيقي ولا منتج ديمو معروف → فعلاً مفيش، ارجع للمتجر
+        navigate("/shop");
+        return;
+      }
+      setProduct(demo);
+      setColor(demo.colors?.[0]?.name || "");
+      setSize(demo.sizes?.[1] || "");
+      setRelated(demoProducts.filter((p) => p.category === demo.category && p.id !== demo.id).slice(0, 4));
+      setLoading(false);
+    };
+
     productsApi.getById(id)
       .catch(() => productsApi.getBySlug(id))
       .then((data) => {
@@ -58,7 +73,7 @@ const ProductDetail = () => {
           .then((res) => setRelated((res.data || []).map(mapProduct).filter((p: Product) => p.id !== mapped.id).slice(0, 4)))
           .catch(() => {});
       })
-      .catch(() => navigate("/shop"))
+      .catch(useDemoFallback) // السيرفر فشل أو المنتج مش موجود في الداتا بيز → جرب بيانات الديمو
       .finally(() => setLoading(false));
   }, [id]);
 

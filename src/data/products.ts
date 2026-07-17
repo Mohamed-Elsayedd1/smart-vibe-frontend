@@ -25,6 +25,8 @@ export interface DemoCategory {
   count: number;
 }
 
+// منتجات حقيقية بتيجي من الـ API عادةً.
+// المصفوفة دي بتفضل فاضية، والـ fallback بيحصل في مكان الاستخدام (FeaturedProducts, Hero, Shop...)
 export const products: Product[] = [];
 export const categories: DemoCategory[] = [];
 
@@ -35,6 +37,20 @@ export const megaCategories = [
   { name: "ترفيه ذكي", icon: "🎬", links: ["شاشات ذكية", "أجهزة صوت", "ألعاب VR"] },
 ];
 
+/**
+ * ============================================================
+ *  DEMO DATA — بيانات عرض تجريبية
+ * ============================================================
+ * بتتستخدم كـ fallback في حالتين بس:
+ *  1) الـ API فشل يرد (السيرفر نايم / وقع / مفيش إنترنت).
+ *  2) الـ API رد لكن رجّع قائمة فاضية (لسه محدش ضاف منتجات حقيقية).
+ *
+ * الهدف: الموقع يفضل شايف ومقنع بصريًا حتى لو الباك إند مش شغال
+ * (زي لو اشتراك Railway خلص)، بدل ما يظهر فاضي أو Placeholder.
+ * أول ما تضيف منتجات حقيقية من لوحة التحكم، الموقع هيعرضها هي
+ * تلقائيًا بدل الـ demo data.
+ * ============================================================
+ */
 export const demoProducts: Product[] = [
   {
     id: "demo-1",
@@ -45,7 +61,7 @@ export const demoProducts: Product[] = [
     rating: 4.6,
     reviews: 128,
     badge: "الأكثر مبيعاً",
-    image: "https://images.unsplash.com/photo-1550985616-10810253b84d?w=600&q=80",
+    image: "https://placehold.co/600x600/f5b301/1a1a2e?text=Smart+LED+Bulb",
     description: "لمبة إضاءة ذكية تتحكم فيها من موبايلك، تدعم أكثر من 16 مليون لون وتتوافق مع تطبيقات المنزل الذكي.",
     stock: 42,
     features: ["تحكم عبر التطبيق", "16 مليون لون", "توافق مع الأوامر الصوتية"],
@@ -59,7 +75,7 @@ export const demoProducts: Product[] = [
     rating: 4.4,
     reviews: 76,
     badge: "جديد",
-    image: "https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=600&q=80",
+    image: "https://placehold.co/600x600/1e3a5f/ffffff?text=Security+Camera",
     description: "كاميرا مراقبة داخلية بدقة Full HD، رؤية ليلية، وتنبيهات فورية على الموبايل عند اكتشاف حركة.",
     stock: 25,
     features: ["دقة Full HD", "رؤية ليلية", "تنبيهات فورية"],
@@ -71,7 +87,7 @@ export const demoProducts: Product[] = [
     price: 2200,
     rating: 4.7,
     reviews: 54,
-    image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=600&q=80",
+    image: "https://placehold.co/600x600/2c2c2c/ffffff?text=Smart+Door+Lock",
     description: "قفل ذكي يفتح بالبصمة أو الكود أو التطبيق، مناسب للشقق والفلل، بطارية تدوم حتى 6 شهور.",
     stock: 15,
     features: ["فتح بالبصمة", "بطارية تدوم 6 شهور", "تحكم عن بعد"],
@@ -85,7 +101,7 @@ export const demoProducts: Product[] = [
     rating: 4.3,
     reviews: 39,
     badge: "عرض",
-    image: "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=600&q=80",
+    image: "https://placehold.co/600x600/8b4513/ffffff?text=Coffee+Machine",
     description: "جهزّ قهوتك من موبايلك قبل ما تصحى، تتحكم في الجرعة ودرجة الحرارة عن بعد.",
     stock: 18,
     features: ["تحكم عن بعد", "ضبط درجة الحرارة", "جدولة تلقائية"],
@@ -99,7 +115,7 @@ export const demoProducts: Product[] = [
     rating: 4.8,
     reviews: 203,
     badge: "الأكثر مبيعاً",
-    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&q=80",
+    image: "https://placehold.co/600x600/1a1a2e/ffffff?text=Smart+TV",
     description: "شاشة ذكية دقة 4K، تدعم كل تطبيقات المشاهدة، وتتحكم فيها بالصوت.",
     stock: 9,
     features: ["دقة 4K", "تحكم صوتي", "دعم كل التطبيقات"],
@@ -113,7 +129,7 @@ export const demoProducts: Product[] = [
     rating: 4.5,
     reviews: 91,
     badge: "جديد",
-    image: "https://images.unsplash.com/photo-1600166898405-da9535204843?w=600&q=80",
+    image: "https://placehold.co/600x600/2d5f4c/ffffff?text=Robot+Vacuum",
     description: "مكنسة كهربائية ذكية بتنظف البيت لوحدها وتتحكم فيها بالتطبيق أو الصوت.",
     stock: 12,
     features: ["تنظيف تلقائي", "تحكم بالتطبيق", "شحن ذاتي"],
