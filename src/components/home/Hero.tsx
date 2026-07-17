@@ -26,6 +26,7 @@ const Hero = () => {
   const [featured, setFeatured] = useState<FeaturedProduct[]>([]);
   const [loadingFeatured, setLoadingFeatured] = useState(true);
 
+  // جيب إعدادات الـ Hero من الـ API
   useEffect(() => {
     settingsApi.getByKey("hero")
       .then((data) => {
@@ -37,20 +38,26 @@ const Hero = () => {
       .catch(() => {});
   }, []);
 
+  // جيب أول 3 منتجات — بس لو مفيش صورة Hero من الإعدادات
   useEffect(() => {
-    if (settings.image_url) return;
+    if (settings.image_url) return; // لو في صورة → مش محتاجين منتجات
     setLoadingFeatured(true);
     const demoFallback = () =>
       demoProducts.slice(0, 3).map((p) => ({ id: p.id, name: p.name, price: p.price, image: p.image }));
 
-    productsApi.getAll({ pageSize: 3, active: true })
+    productsApi.getAll({ pageSize: 20, active: true })
       .then((res) => {
-        const list = (res.data || res || []).slice(0, 3).map((p: any) => ({
-          id: p.id,
-          name: p.name,
-          price: p.price,
-          image: resolveImageUrl(p.image),
-        }));
+        const list = (res.data || res || [])
+          // مستبعدين الشاشات من الهيرو تحديدًا (بتبقى شكلها مش متسق مع باقي صور المنتجات)
+          .filter((p: any) => !p.name?.includes("شاشة") && !p.name?.includes("تلفزيون"))
+          .slice(0, 3)
+          .map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            image: resolveImageUrl(p.image),
+          }));
+        // لو مفيش منتجات حقيقية لسه، اعرض بيانات تجريبية بدل ما يفضل فاضي
         setFeatured(list.length > 0 ? list : demoFallback());
       })
       .catch(() => setFeatured(demoFallback())) // السيرفر مش راد (نايم على Railway أو واقع) → بيانات تجريبية
@@ -62,6 +69,8 @@ const Hero = () => {
   const titleEnd = "اليوم";
   const subtitle = settings.subtitle || "اكتشف أجهزة المنزل الذكي المدعومة بالذكاء الاصطناعي، صممت لتجعل حياتك أسهل وأكثر راحة.";
   const cta = settings.cta || "تسوق الآن";
+
+  // لو في صورة Hero من الإعدادات، نعرضها بدل المنتجات
   const heroImage = settings.image_url ? resolveImageUrl(settings.image_url) : null;
 
   return (
@@ -113,7 +122,11 @@ const Hero = () => {
             </span>
           </div>
         </motion.div>
+
+        {/* الصور */}
         <div className="md:col-span-2 relative h-[500px] hidden md:block">
+
+          {/* لو في صورة Hero من الإعدادات */}
           {heroImage ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -124,12 +137,14 @@ const Hero = () => {
               <img src={heroImage} alt="Hero" className="w-full h-full object-cover" />
             </motion.div>
           ) : loadingFeatured ? (
+            // Skeleton بسيط لحد ما المنتجات توصل (بدل ما يظهر Placeholder ثابت)
             <div className="absolute inset-0 grid grid-rows-3 gap-4">
               {[0, 1, 2].map((i) => (
                 <div key={i} className="bg-surface rounded-2xl border border-border animate-pulse" />
               ))}
             </div>
           ) : featured.length > 0 ? (
+            // لو فيه منتجات من الـ API
             featured.map((p, i) => (
               <motion.div
                 key={p.id}
@@ -150,6 +165,7 @@ const Hero = () => {
               </motion.div>
             ))
           ) : (
+            // Placeholder لو مفيش بيانات لسه
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
